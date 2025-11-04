@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Gallery</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/animations.css" />
+  </head>
+  <body>
+    <div class="gallery-container">
+      <div class="storage-warning" id="storageWarning">
+        <span
+          >⚠️ Storage limit reached. Images are stored temporarily for this
+          session only.</span
+        >
+        <button onclick="this.parentElement.classList.remove('show')">
+          Got it
+        </button>
+      </div>
+
+      <header class="gallery-header">
+        <div class="header-top">
+          <div class="logo-section">
+            <h1>📸 Photo Gallery</h1>
+            <p class="subtitle">Capture your moments</p>
+          </div>
+          <div class="header-actions">
+            <div class="upload-btn-wrapper">
+              <button class="upload-btn">
+                <span class="btn-icon">📤</span>
+                <span>Upload Image</span>
+              </button>
+              <input type="file" id="imageUpload" accept="image/*" multiple />
+            </div>
+            <button class="favorites-toggle" id="favoritesToggle">
+              <span class="heart-icon">♥</span>
+              <span class="favorites-count">0</span>
+            </button>
+          </div>
+        </div>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-category="all">
+            <span class="filter-icon">🌐</span>
+            All
+          </button>
+          <button class="filter-btn" data-category="nature">
+            <span class="filter-icon">🌲</span>
+            Nature
+          </button>
+          <button class="filter-btn" data-category="city">
+            <span class="filter-icon">🏙️</span>
+            City
+          </button>
+          <button class="filter-btn" data-category="people">
+            <span class="filter-icon">👥</span>
+            People
+          </button>
+          <button class="filter-btn" data-category="custom">
+            <span class="filter-icon">⭐</span>
+            My Uploads
+          </button>
+        </div>
+      </header>
+
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Loading gallery...</p>
+        </div>
+      </div>
+
+      <div class="favorites-panel" id="favoritesPanel">
+        <div class="favorites-header">
+          <h2>❤️ Your Favorites</h2>
+          <button class="close-favorites">&times;</button>
+        </div>
+        <div class="favorites-grid" id="favoritesGrid"></div>
+      </div>
+    </div>
+  </body>
+
+  <script src="./js/main.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/components/GalleryState.js"></script>
+  <script src="./js/components/GalleryApp.js"></script>
+  <script src="./js/components/GalleryRenderer.js"></script>
+</html>
