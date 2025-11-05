@@ -469,3 +469,94 @@ body {
 .favorite-item:hover img {
   transform: scale(1.15);
 }
+.upload-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.upload-modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.upload-modal .upload-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 900px;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+.upload-modal:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
+.upload-body {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+.upload-image-wrap {
+  flex: 1 1 55%;
+  height: 420px;
+  background: #f6f6f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.upload-image-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: default;
+  transition: transform 0.25s ease;
+}
+.upload-form {
+  flex: 1 1 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.upload-form label {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+.upload-form input,
+.upload-form select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+.upload-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.upload-save {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.upload-cancel {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}

@@ -18,6 +18,19 @@ class GalleryApp {
   }
 
   attachEventListeners() {
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        document.querySelectorAll(".filter-btn").forEach((b) => {
+          b.classList.remove("active");
+          const target = e.currentTarget || btn;
+          target.classList.add("active");
+          this.state.currentFilter = target.dataset.category || "all";
+          this.renderer.renderGallery();
+          this.attachGalleryItemListeners();
+        });
+      });
+    });
+
     const favToggle = document.getElementById("favoritesToggle");
     if (favToggle) {
       favToggle.addEventListener("click", () => {
@@ -53,6 +66,22 @@ class GalleryApp {
         }
       }
     });
+
+    document.addEventListener("click", (e) => {
+      const delBtn = e.target.closest && e.target.closest(".delete-btn");
+      if (delBtn) {
+        e.stopPropagation();
+        const imageId = parseInt(delBtn.dataset.id);
+        if (Number.isNaN(imageId)) return;
+        if (!confirm("Are you sure you want to delete this image?")) return;
+        const deleted = this.state.deleteImage(imageId);
+        if (deleted) {
+          this.renderer.renderGallery();
+          this.renderer.updateFavoritesCount();
+          this.attachGalleryItemListeners();
+        }
+      }
+    });
   }
 
   attachGalleryItemListeners() {
@@ -67,6 +96,46 @@ class GalleryApp {
         });
       }
     });
+
+    this.uploadModal = document.getElementById("uploadModal");
+    this.uploadPreview = document.getElementById("uploadPreview");
+    this.uploadTitle = document.getElementById("uploadTitle");
+    this.uploadCategory = document.getElementById("uploadCategory");
+    this.saveUploadBtn = document.getElementById("saveUpload");
+    this.cancelUploadBtn = document.getElementById("cancelUpload");
+    this.uploadCloseBtn = document.querySelector(".upload-close");
+
+    if (this.uploadCloseBtn)
+      this.uploadCloseBtn.addEventListener("click", () =>
+        this.closeUploadModal()
+      );
+    if (this.cancelUploadBtn)
+      this.cancelUploadBtn.addEventListener("click", () =>
+        this.closeUploadModal()
+      );
+    if (this.saveUploadBtn)
+      this.saveUploadBtn.addEventListener("click", () => this.saveUpload());
+
+    const imageUpload = document.getElementById("imageUpload");
+    if (imageUpload) {
+      imageUpload.addEventListener("change", (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const dataUrl = ev.target.result;
+          if (this.uploadPreview) this.uploadPreview.src = dataUrl;
+          if (this.uploadTitle)
+            this.uploadTitle.value = file.name.replace(/\.[^/.]+$/, "");
+          if (this.uploadCategory) this.uploadCategory.value = "custom";
+          this._pendingUploadDataUrl = dataUrl;
+          this.openUploadModal();
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+      });
+    }
   }
 
   attachFavoriteItemListeners() {
@@ -80,5 +149,40 @@ class GalleryApp {
         }
       });
     });
+  }
+
+  openUploadModal() {
+    if (!this.uploadModal) return;
+    this.uploadModal.classList.remove("hidden");
+  }
+
+  closeUploadModal() {
+    if (!this.uploadModal) return;
+    this.uploadModal.classList.add("hidden");
+    this._pendingUploadDataUrl = null;
+    if (this.uploadPreview) {
+      this.uploadPreview.src = "";
+      this.uploadPreview.style.transform = "";
+    }
+    if (this.uploadTitle) this.uploadTitle.value = "";
+    if (this.uploadCategory) this.uploadCategory.value = "custom";
+  }
+
+  saveUpload() {
+    if (!this._pendingUploadDataUrl) return;
+    const title = this.uploadTitle ? this.uploadTitle.value.trim() : "Untitled";
+    const category = this.uploadCategory ? this.uploadCategory.value : "custom";
+    this.state.addImage({
+      title: title || "Untitled",
+      category,
+      url: this._pendingUploadDataUrl,
+    });
+    this.renderer.renderGallery();
+    this.renderer.updateFavoritesCount();
+    this.attachGalleryItemListeners();
+    this.closeUploadModal();
+    showNotification &&
+      typeof showNotification === "function" &&
+      showNotification("Image uploaded", "success");
   }
 }

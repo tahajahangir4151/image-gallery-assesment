@@ -78,8 +78,36 @@
         <div class="favorites-grid" id="favoritesGrid"></div>
       </div>
     </div>
+
+    <div id="uploadModal" class="upload-modal hidden">
+      <div class="upload-modal-content">
+        <div class="upload-body">
+          <div class="upload-image-wrap">
+            <img id="uploadPreview" src="" alt="Upload Preview" />
+          </div>
+          <div class="upload-form">
+            <label for="uploadTitle">Title</label>
+            <input id="uploadTitle" type="text" placeholder="Image title" />
+
+            <label for="uploadCategory">Category</label>
+            <select id="uploadCategory">
+              <option value="custom">Custom</option>
+              <option value="nature">Nature</option>
+              <option value="city">City</option>
+              <option value="people">People</option>
+            </select>
+
+            <div class="upload-actions">
+              <button id="saveUpload" class="upload-save">Save</button>
+              <button id="cancelUpload" class="upload-cancel">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 
+  <script src="./js/utils.js"></script>
   <script src="./js/main.js"></script>
   <script src="./js/config.js"></script>
   <script src="./js/components/GalleryState.js"></script>
