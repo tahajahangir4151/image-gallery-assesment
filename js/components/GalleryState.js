@@ -15,7 +15,16 @@ class GalleryState {
       const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.IMAGES);
       if (stored) {
         const parsed = JSON.parse(stored);
-        return parsed.length > 0 ? parsed : CONFIG.DEFAULT_IMAGES;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const defaultIds = new Set((CONFIG.DEFAULT_IMAGES || []).map((i) => i.id));
+          return parsed.map((img) => {
+            if (typeof img.isCustom === "undefined") {
+              img.isCustom = !defaultIds.has(img.id);
+            }
+            return img;
+          });
+        }
+        return CONFIG.DEFAULT_IMAGES.slice();
       }
       return CONFIG.DEFAULT_IMAGES;
     } catch (error) {
@@ -127,6 +136,9 @@ class GalleryState {
   getFilteredImages() {
     if (this.currentFilter === "all") {
       return this.images;
+    }
+    if (this.currentFilter === "custom") {
+      return this.images.filter((img) => img.isCustom);
     }
     return this.images.filter((img) => img.category === this.currentFilter);
   }
